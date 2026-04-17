@@ -1,54 +1,57 @@
-# 🏎️ Assetto Corsa EVO - Pterodactyl Egg
-
-Ce dépôt contient l'Egg Pterodactyl pour **Assetto Corsa EVO** ainsi que la configuration nécessaire pour optimiser le stockage via les points de montage (Mounts).
+# Assetto Corsa EVO - Pterodactyl Egg
 
 ---
 
-## 🛠️ Installation de l'Egg
+## 🇬🇧 English Version
 
+This repository contains the Pterodactyl Egg for **Assetto Corsa EVO**, designed to use Mounts for storage optimization.
+
+### 🛠️ Egg Installation
+1. **Download**: Get the `egg-assetto-corsa-evo.json` file.
+2. **Import**: 
+   - Go to **Pterodactyl Admin** > **Nests**.
+   - Click **Import Egg**, select the file, and confirm.
+
+### 💾 Mount Configuration (Shared Files)
+The main file **`content_game.kspkg`** is around 67 GB. To save space across multiple instances, set up a Mount:
+
+1. **Creation**: Go to **Mounts** > **Create New**.
+   - **Name**: `AC EVO Shared Content`
+   - **Source**: `/var/lib/pterodactyl/mounts/acevo_shared`
+   - **Target**: `/home/container/shared`
+   - **ReadOnly**: `False`
+   - **User Mountable**: `True`
+2. **Linking**:
+   - In the **Eggs** tab, add the **Assetto Corsa EVO** egg.
+   - In the **Nodes** tab, add your target node.
+
+### 🚀 Deployment
+When creating your server instance, attach the Mount in the server settings so the Egg can access the `.kspkg` file.
+
+---
+
+## 🇫🇷 Version Française
+
+Ce dépôt contient l'Egg Pterodactyl pour **Assetto Corsa EVO**. Cette configuration utilise les points de montage (Mounts) pour optimiser l'espace disque.
+
+### 🛠️ Installation de l'Egg
 1. **Téléchargement** : Récupérez le fichier `egg-assetto-corsa-evo.json`.
 2. **Importation** : 
-   - Allez dans le panel d'administration **Pterodactyl** > **Nests**.
-   - Cliquez sur le bouton **Import Egg**.
-   - Sélectionnez le fichier `.json` et validez.
+   - Allez dans l'administration **Pterodactyl** > **Nests**.
+   - Cliquez sur **Import Egg**, sélectionnez le fichier et validez.
 
----
+### 💾 Configuration du Mount (Partage de fichiers)
+Le fichier principal **`content_game.kspkg`** pèse environ 67 Go. Pour éviter de le dupliquer sur chaque serveur, configurez un Mount :
 
-## 💾 Configuration du Stockage Partagé (Mounts)
+1. **Création** : Allez dans **Mounts** > **Create New**.
+   - **Name** : `AC EVO Shared Content`
+   - **Source** : `/var/lib/pterodactyl/mounts/acevo_shared`
+   - **Target** : `/home/container/shared`
+   - **ReadOnly** : `False`
+   - **User Mountable** : `True`
+2. **Liaison** :
+   - Dans l'onglet **Eggs**, ajoutez l'egg **Assetto Corsa EVO**.
+   - Dans l'onglet **Nodes**, ajoutez votre node de destination.
 
-Le jeu nécessite environ **67 Go**. Pour éviter de saturer le disque en dupliquant les fichiers sur chaque instance, suivez cette configuration :
-
-### 1. Créer le point de montage
-Dans l'administration du panel, allez dans **Mounts** et créez un nouveau mount avec ces paramètres :
-
-* **Name** : `AC EVO Shared Content`
-* **Description** : `Fichier de 67 Go partagé entre les instances`
-* **Source** : `/var/lib/pterodactyl/mounts/acevo_shared`
-* **Target** : `/home/container/shared`
-* **ReadOnly** : `False`
-* **User Mountable** : `True`
-
-### 2. Lier l'Egg et le Node
-Une fois le mount créé, vous devez lui assigner les ressources :
-* **Onglet Eggs** : Ajoutez l'egg **Assetto Corsa EVO**.
-* **Onglet Nodes** : Ajoutez votre node (ex: `RXCORP-Node-FR1`).
-
----
-
-## 🚀 Lancement du Serveur
-
-Lors de la création du serveur sur le panel :
-1. Sélectionnez l'Egg **Assetto Corsa EVO**.
-2. Dans l'onglet **Mounts** du serveur, assurez-vous que le stockage partagé est bien lié.
-3. Lancez l'installation.
-
----
-
-## 🇬🇧 English Summary
-
-1. **Import Egg**: Upload the `.json` file in **Nests** > **Import Egg**.
-2. **Setup Mount**: Create a mount to share the **67 GB** game files.
-    - **Source**: `/var/lib/pterodactyl/mounts/acevo_shared`
-    - **Target**: `/home/container/shared`
-3. **Link**: Attach the **Assetto Corsa EVO** Egg and your **Node** to this mount.
-4. **Deploy**: Create the server and ensure the mount is active.
+### 🚀 Lancement
+Lors de la création de votre instance, liez le Mount dans les paramètres du serveur pour que l'Egg puisse lire le fichier `.kspkg`.
