@@ -1,0 +1,172 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-04-17T18:58:57+00:00",
+    "name": "Assetto Corsa EVO",
+    "author": "salemassadi097@gmail.com",
+    "description": "Assetto Corsa EVO (v0.6+) Dedicated Server. Pre-bundled Docker image (shadowyt\/acevo-server). No Steam credentials required. Runs AssettoCorsaEVOServer.exe via Wine.",
+    "features": [],
+    "docker_images": {
+        "shadowyt\/acevo-server:latest": "shadowyt\/acevo-server:latest"
+    },
+    "file_denylist": [],
+    "startup": "bash \/usr\/local\/bin\/start.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"[RemoteGameServer]\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\nset -e\nmkdir -p \/mnt\/server\/cfg \/mnt\/server\/logs\necho done",
+            "container": "ghcr.io\/parkervcp\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server Name",
+            "description": "Name displayed in the server browser.",
+            "env_variable": "SERVER_NAME",
+            "default_value": "AC EVO Server",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "HTTP Port",
+            "description": "HTTP REST API port.",
+            "env_variable": "HTTP_PORT",
+            "default_value": "8080",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Max Players",
+            "description": "Maximum number of players.",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "16",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Password",
+            "description": "Password to join. Leave empty for public.",
+            "env_variable": "SERVER_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Admin Password",
+            "description": "Admin password.",
+            "env_variable": "ADMIN_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Type",
+            "description": "MultiplayerServerListSessionType_RANKED \/ _UNRANKED \/ _PRIVATE",
+            "env_variable": "SERVER_TYPE",
+            "default_value": "MultiplayerServerListSessionType_RANKED",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Game Type",
+            "description": "GameModeType_PRACTICE or GameModeType_RACE",
+            "env_variable": "GAME_TYPE",
+            "default_value": "GameModeType_PRACTICE",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Track",
+            "description": "Track name (e.g. Brands Hatch, Monza, Silverstone).",
+            "env_variable": "TRACK",
+            "default_value": "Brands Hatch",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Track Layout",
+            "description": "Track layout (e.g. GP, Indy, National).",
+            "env_variable": "LAYOUT",
+            "default_value": "GP",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Event Name",
+            "description": "Session name shown in-game.",
+            "env_variable": "EVENT_NAME",
+            "default_value": "Practice Session",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Track Length (m)",
+            "description": "Track length in meters for display (e.g. 3916).",
+            "env_variable": "TRACK_LENGTH",
+            "default_value": "3916",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Practice Duration (seconds)",
+            "description": "Duration of practice session in seconds.",
+            "env_variable": "PRACTICE_DURATION",
+            "default_value": "3600",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Weather",
+            "description": "GameModeSelectionWeatherType_CLEAR \/ _OVERCAST \/ _RAIN",
+            "env_variable": "WEATHER_TYPE",
+            "default_value": "GameModeSelectionWeatherType_CLEAR",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Initial Grip",
+            "description": "InitialGrip_GREEN \/ InitialGrip_FAST \/ InitialGrip_OPTIMUM",
+            "env_variable": "INITIAL_GRIP",
+            "default_value": "InitialGrip_GREEN",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        }
+    ]
+}
