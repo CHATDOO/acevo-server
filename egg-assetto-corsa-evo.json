@@ -1,0 +1,122 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-07-13T11:00:00+02:00",
+    "name": "Assetto Corsa Evo (Proton)",
+    "author": "contact@rxcorp.fr",
+    "description": "Assetto Corsa Evo dedicated server via Proton, with the RXCORP web dashboard (default port 8090).\n\nIMPORTANT: Do NOT allocate the dashboard port in Pterodactyl — the dashboard is accessed via the RXCORP reverse proxy.\n\nAll game settings (server name, track, cars, sessions, etc.) are managed exclusively through the web dashboard. Do NOT add Pterodactyl variables for game settings — they would be overwritten on every restart.\n\nPersistence and theme injection are baked into the Docker image. No manual build step is required.",
+    "features": null,
+    "docker_images": {
+        "RXCORP AC Evo": "shadowyt\/acevo-ptero:latest"
+    },
+    "file_denylist": [],
+    "startup": "\/opt\/acevo\/scripts\/start.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\"done\": \"AC EVO dashboard listening on\"}",
+        "logs": "{}",
+        "stop": "^^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\napt-get update\napt-get install -y curl\necho \"Installation complete — server files will be downloaded on first start via SteamCMD.\"",
+            "container": "debian:bookworm-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server TCP Port",
+            "description": "TCP port for game traffic. Must match the Pterodactyl allocation.",
+            "env_variable": "SERVER_TCP_PORT",
+            "default_value": "9600",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1024,65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Server UDP Port",
+            "description": "UDP port for game traffic. Must match the Pterodactyl allocation. Often the same as TCP.",
+            "env_variable": "SERVER_UDP_PORT",
+            "default_value": "9600",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1024,65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Dashboard Username",
+            "description": "Username for the web dashboard HTTP Basic Auth.",
+            "env_variable": "DASHBOARD_USER",
+            "default_value": "admin",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:64",
+            "field_type": "text"
+        },
+        {
+            "name": "Dashboard Password",
+            "description": "Password for the web dashboard. Leave empty to disable authentication (not recommended).",
+            "env_variable": "DASHBOARD_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:128",
+            "field_type": "text"
+        },
+        {
+            "name": "Steam Username",
+            "description": "Steam account username for SteamCMD. Use a dedicated burner account — credentials are stored in plaintext.",
+            "env_variable": "STEAM_USERNAME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:64",
+            "field_type": "text"
+        },
+        {
+            "name": "Steam Password",
+            "description": "Steam account password for SteamCMD. Use a dedicated burner account.",
+            "env_variable": "STEAM_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:128",
+            "field_type": "text"
+        },
+        {
+            "name": "Steam Guard Code",
+            "description": "One-time Steam Guard code. Only needed on first login or after a session expires. Leave empty once authenticated.",
+            "env_variable": "STEAM_AUTH_CODE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:10",
+            "field_type": "text"
+        },
+        {
+            "name": "Auto Update",
+            "description": "Automatically update the game server via SteamCMD on each startup.",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "Dashboard Port",
+            "description": "Port for the web dashboard. Make sure you don't allocate this as a game port in Pterodactyl. Default is 8090.",
+            "env_variable": "DASHBOARD_PORT",
+            "default_value": "8090",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1024,65535",
+            "field_type": "text"
+        }
+    ]
+}
