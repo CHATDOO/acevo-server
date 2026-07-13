@@ -35,8 +35,4 @@ Unlike standard wrappers that require manual Dockerfile builds on the host node,
 3. Select your Nest (e.g., `Steam`) and click **Import Egg** in the top right.
 4. Upload the JSON file and click **Import**.
 
-### Step 2: Open Host Firewall Ports
-Ensure your server node has the necessary game ports open in the firewall. For example, if you allocate ports `11000` to `11100`:
-```bash
-sudo ufw allow 11000:11100/tcp
-sudo ufw allow 11000:11100/udp
+
