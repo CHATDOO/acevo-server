@@ -1,124 +1,42 @@
-# 🏎️ Assetto Corsa EVO – Pterodactyl Egg
+# 🏎️ Assetto Corsa Evo (Proton) Pterodactyl Egg
+
+This repository provides a custom Pterodactyl Egg for the **Assetto Corsa Evo** dedicated server, running natively via Proton, and rebranded with a custom red/black dashboard web UI.
+
+Unlike standard wrappers that require manual Dockerfile builds on the host node, this Egg is designed for **single-file import** with zero manual server preparation.
 
 ---
 
-## 🇬🇧 English Version
+## 🚀 Key Features
 
-This repository provides a **Pterodactyl Egg for Assetto Corsa EVO**, designed to optimize disk usage through shared mounts.
-
----
-
-## 🛠️ Egg Installation
-
-1. **Download** the file `egg-assetto-corsa-evo.json`.
-2. Go to your **Pterodactyl Admin Panel**:
-
-   * `Nests` → `Import Egg`
-3. Import the downloaded file.
+* **No-Build Deployment** 📦  
+  Just import the JSON file. Pterodactyl pulls the pre-built wrapper image (`shadowyt/acevo-ptero:latest`) automatically.
+* **Integrated Web Dashboard** 📊  
+  A fully rebranded web-based SPA dashboard (red/black layout) on a custom port to configure server settings, track layouts, car lists, and view real-time logs.
+* **Clean Process Lifecycle** 🧹  
+  Automated Wine/Proton process cleanup on shutdown/restarts to eliminate lingering processes and port binding conflicts.
+* **Persistent Data** 💾  
+  Configurations, steam caches, and server logs are stored in Pterodactyl's `/home/container` directory.
 
 ---
 
-## 💾 Mount Configuration (Shared Content)
+## 🛠️ Prerequisites
 
-To prevent duplication of the **67 GB** file `content_game.kspkg`, configure a shared mount.
+* A running **Pterodactyl Panel** instance.
+* Ports allocated for the game server (e.g., `11009` TCP and `11010` UDP) and one port for the Web Dashboard (e.g., `8090` TCP).
+* A **Steam burner account** that owns the game (credentials are stored in plaintext by Pterodactyl).
 
-### 📁 Create the Mount
+---
 
-* **Name**: `AC EVO Shared Content`
-* **Source**: `/var/lib/pterodactyl/mounts/acevo_shared`
-* **Target**: `/home/container/shared`
-* **ReadOnly**: `False`
-* **User Mountable**: `True`
+## 📦 Installation
 
-### 🔐 Set Permissions
+### Step 1: Import the Egg
+1. Download [egg-assetto-corsa-evo.json](./egg-assetto-corsa-evo.json) from this repository.
+2. Go to your **Pterodactyl Admin Panel** -> **Nests**.
+3. Select your Nest (e.g., `Steam`) and click **Import Egg** in the top right.
+4. Upload the JSON file and click **Import**.
 
-Run the following commands on your node:
-
+### Step 2: Open Host Firewall Ports
+Ensure your server node has the necessary game ports open in the firewall. For example, if you allocate ports `11000` to `11100`:
 ```bash
-chown -R pterodactyl:pterodactyl /var/lib/pterodactyl/mounts/acevo_shared
-chmod -R 755 /var/lib/pterodactyl/mounts/acevo_shared
-```
-
-### 🔗 Linking
-
-Attach the following to the mount:
-
-* The **Assetto Corsa EVO Egg**
-* Your **Node**
-
----
-
-## 🇫🇷 Version Française
-
-Ce dépôt fournit un **Egg Pterodactyl pour Assetto Corsa EVO**, optimisé pour réduire l'utilisation disque grâce aux mounts partagés.
-
----
-
-## 🛠️ Installation de l’Egg
-
-1. **Téléchargez** le fichier `egg-assetto-corsa-evo.json`.
-2. Dans le panel **Pterodactyl** :
-
-   * `Nests` → `Import Egg`
-3. Importez le fichier.
-
----
-
-## 💾 Configuration du Mount (Fichiers partagés)
-
-Le fichier principal `content_game.kspkg` (~67 Go) peut être mutualisé entre plusieurs serveurs pour économiser de l’espace disque.
-
-### 📁 Création du Mount
-
-* **Nom** : `AC EVO Shared Content`
-* **Source** : `/var/lib/pterodactyl/mounts/acevo_shared`
-* **Cible** : `/home/container/shared`
-* **Lecture seule** : `False`
-* **Montable par l’utilisateur** : `True`
-
-### 🔐 Permissions
-
-Exécutez sur le node :
-
-```bash
-chown -R pterodactyl:pterodactyl /var/lib/pterodactyl/mounts/acevo_shared
-chmod -R 755 /var/lib/pterodactyl/mounts/acevo_shared
-```
-
-### 🔗 Liaison
-
-Associez :
-
-* L’**Egg Assetto Corsa EVO**
-* Votre **Node**
-
----
-
-## 🚀 Hosting – RXCORP
-
-Besoin d’un serveur performant pour Assetto Corsa EVO ?
-
-* 🌐 Site : [https://rxcorp.fr/](https://rxcorp.fr/)
-* 💬 Discord : [https://discord.gg/7afGkCRD9f](https://discord.gg/7afGkCRD9f)
-
----
-
-## 📌 Features
-
-* ✅ Optimized disk usage (shared mounts)
-* ✅ Easy deployment with Pterodactyl
-* ✅ Suitable for multi-server environments
-
----
-
-## ⚠️ Notes
-
-* Ensure proper permissions are set on the mount folder.
-* Make sure the mount is attached to both the egg and the node.
-* Incorrect configuration may prevent the server from starting.
-
----
-
-## 📄 License
-
-This project is provided as-is. You are free to use and modify it.
+sudo ufw allow 11000:11100/tcp
+sudo ufw allow 11000:11100/udp
