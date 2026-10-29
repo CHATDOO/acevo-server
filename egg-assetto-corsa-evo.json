@@ -4,73 +4,53 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2026-07-13T11:00:00+02:00",
+    "exported_at": "2026-07-12T21:46:05-04:00",
     "name": "Assetto Corsa Evo (Proton)",
-    "author": "contact@rxcorp.fr",
-    "description": "Assetto Corsa Evo dedicated server via Proton, with the RXCORP web dashboard (default port 8090).\n\nIMPORTANT: Do NOT allocate the dashboard port in Pterodactyl — the dashboard is accessed via the RXCORP reverse proxy.\n\nAll game settings (server name, track, cars, sessions, etc.) are managed exclusively through the web dashboard. Do NOT add Pterodactyl variables for game settings — they would be overwritten on every restart.\n\nPersistence and theme injection are baked into the Docker image. No manual build step is required.",
-    "features": null,
+    "author": "chatdoo",
+    "description": "Custom Pterodactyl Egg for the Assetto Corsa Evo dedicated server running natively via Proton.\r\n\r\n*** REQUIRED PREPARATION ***\r\nTo bypass Pterodactyl read-only restrictions and allow the dashboard to write to configuration files, you MUST build a local Docker wrapper before installing this server. Run these commands on your host via SSH:\r\n\r\nmkdir -p ~/acevo-build && cd ~/acevo-build\r\ncat <<EOF > Dockerfile\r\nFROM zino1337/acevo-server:latest\r\nUSER root\r\nRUN rm -rf /data && ln -s /home/container /data\r\nRUN rm -rf /root && ln -s /home/container /root\r\nUSER 1000\r\nEOF\r\ndocker build -t acevo-ptero:latest .\r\n\r\n*** PORT & DASHBOARD SETUP ***\r\n1. Network Allocations: Only assign the Game TCP and Game UDP ports in the Pterodactyl Network tab (typically the same port). Do NOT allocate port 8090.\r\n2. Dashboard Access: The web dashboard runs on internal port 8090. To access it, route traffic via a local reverse proxy (like NPMplus) to the container's internal IP on port 8090.\r\n3. Game Configuration: Configure the server name, cars, track, and rules exclusively through the Web Dashboard. Do NOT add Pterodactyl variables for game settings (e.g., SERVER_NAME, ADMIN_PASSWORD), as the startup script will overwrite your dashboard saves.\r\n\r\n*** SECURITY & PERMISSIONS ***\r\n* Docker Permissions: The build process elevates to `root` only to create necessary system symlinks for persistent storage. It explicitly drops privileges to USER 1000 before the image is finalized and executed, ensuring the server runs in an unprivileged user-space.\r\n* Steam Credentials: Pterodactyl environment variables are stored in plaintext. It is highly recommended to use a dedicated \"burner\" Steam account for the Steam Username/Password variables rather than your personal account.",
+    "features": [],
     "docker_images": {
-        "RXCORP AC Evo": "shadowyt\/acevo-ptero:latest"
+        "acevo-ptero:latest": "acevo-ptero:latest"
     },
     "file_denylist": [],
-    "startup": "\/opt\/acevo\/scripts\/start.sh",
+    "startup": "/opt/acevo/scripts/start.sh",
     "config": {
         "files": "{}",
-        "startup": "{\"done\": \"AC EVO dashboard listening on\"}",
+        "startup": "{\r\n    \"done\": \"server\"\r\n}",
         "logs": "{}",
-        "stop": "^^C"
+        "stop": "^C"
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\napt-get update\napt-get install -y curl\necho \"Installation complete — server files will be downloaded on first start via SteamCMD.\"",
-            "container": "debian:bookworm-slim",
-            "entrypoint": "bash"
+            "script": "#!/bin/ash\r\necho \"Initialization complete. Game files will be handled by the Docker container upon first startup.\"",
+            "container": "alpine:3.4",
+            "entrypoint": "ash"
         }
     },
     "variables": [
         {
             "name": "Server TCP Port",
-            "description": "TCP port for game traffic. Must match the Pterodactyl allocation.",
+            "description": "The TCP port used for the server's web interface and API polling. Must be unique for every running server.",
             "env_variable": "SERVER_TCP_PORT",
-            "default_value": "9600",
+            "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|integer|between:1024,65535",
-            "field_type": "text"
-        },
-        {
-            "name": "Server UDP Port",
-            "description": "UDP port for game traffic. Must match the Pterodactyl allocation. Often the same as TCP.",
-            "env_variable": "SERVER_UDP_PORT",
-            "default_value": "9600",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|integer|between:1024,65535",
-            "field_type": "text"
-        },
-        {
-            "name": "Dashboard Username",
-            "description": "Username for the web dashboard HTTP Basic Auth.",
-            "env_variable": "DASHBOARD_USER",
-            "default_value": "admin",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|string|max:64",
+            "rules": "required|numeric|between:1,65535",
             "field_type": "text"
         },
         {
             "name": "Dashboard Password",
-            "description": "Password for the web dashboard. Leave empty to disable authentication (not recommended).",
+            "description": "Password for dashboard",
             "env_variable": "DASHBOARD_PASSWORD",
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string|max:128",
+            "rules": "required|string|max:20",
             "field_type": "text"
         },
         {
             "name": "Steam Username",
-            "description": "Steam account username for SteamCMD. Use a dedicated burner account — credentials are stored in plaintext.",
+            "description": "Steam account name (not email).",
             "env_variable": "STEAM_USERNAME",
             "default_value": "",
             "user_viewable": true,
@@ -80,7 +60,7 @@
         },
         {
             "name": "Steam Password",
-            "description": "Steam account password for SteamCMD. Use a dedicated burner account.",
+            "description": "Steam account password.",
             "env_variable": "STEAM_PASSWORD",
             "default_value": "",
             "user_viewable": true,
@@ -89,33 +69,23 @@
             "field_type": "text"
         },
         {
-            "name": "Steam Guard Code",
-            "description": "One-time Steam Guard code. Only needed on first login or after a session expires. Leave empty once authenticated.",
-            "env_variable": "STEAM_AUTH_CODE",
+            "name": "Server UDP Port",
+            "description": "UDP Game Port",
+            "env_variable": "SERVER_UDP_PORT",
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string|max:10",
+            "rules": "required|numeric|between:1,65535",
             "field_type": "text"
         },
         {
-            "name": "Auto Update",
-            "description": "Automatically update the game server via SteamCMD on each startup.",
-            "env_variable": "AUTO_UPDATE",
-            "default_value": "true",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "field_type": "text"
-        },
-        {
-            "name": "Dashboard Port",
-            "description": "Port for the web dashboard. Make sure you don't allocate this as a game port in Pterodactyl. Default is 8090.",
-            "env_variable": "DASHBOARD_PORT",
-            "default_value": "8090",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|integer|between:1024,65535",
+            "name": "Game Internal API Port",
+            "description": "Game Internal API Port",
+            "env_variable": "SERVER_HTTP_PORT",
+            "default_value": "48080",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|numeric|between:1,65535",
             "field_type": "text"
         }
     ]
