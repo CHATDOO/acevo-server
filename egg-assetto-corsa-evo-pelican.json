@@ -1,0 +1,92 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PELICAN PANEL - PELICAN.DEV",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-07-12T21:46:05-04:00",
+    "name": "Assetto Corsa Evo (Pelican)",
+    "author": "chatdoo",
+    "description": "Custom Pelican Egg for the Assetto Corsa Evo dedicated server running natively via Proton.\r\n\r\n*** REQUIRED PREPARATION ***\r\nTo bypass panel read-only restrictions and allow the dashboard to write to configuration files, you MUST build a local Docker wrapper before installing this server. Run these commands on your host via SSH:\r\n\r\nmkdir -p ~/acevo-build && cd ~/acevo-build\r\ncat <<EOF > Dockerfile\r\nFROM zino1337/acevo-server:latest\r\nUSER root\r\nRUN rm -rf /data && ln -s /home/container /data\r\nRUN rm -rf /root && ln -s /home/container /root\r\nUSER 1000\r\nEOF\r\ndocker build -t acevo-ptero:latest .\r\n\r\n*** PORT & DASHBOARD SETUP ***\r\n1. Network Allocations: Only assign the Game TCP and Game UDP ports in the panel Network tab (typically the same port). Do NOT allocate port 8090.\r\n2. Dashboard Access: The web dashboard runs on internal port 8090. To access it, route traffic via a local reverse proxy (like NPMplus) to the container's internal IP on port 8090.\r\n3. Game Configuration: Configure the server name, cars, track, and rules exclusively through the Web Dashboard. Do NOT add panel variables for game settings (e.g., SERVER_NAME, ADMIN_PASSWORD), as the startup script will overwrite your dashboard saves.\r\n\r\n*** SECURITY & PERMISSIONS ***\r\n* Docker Permissions: The build process elevates to `root` only to create necessary system symlinks for persistent storage. It explicitly drops privileges to USER 1000 before the image is finalized and executed, ensuring the server runs in an unprivileged user-space.\r\n* Steam Credentials: Panel environment variables are stored in plaintext. It is highly recommended to use a dedicated \"burner\" Steam account for the Steam Username/Password variables rather than your personal account.",
+    "features": [],
+    "docker_images": {
+        "acevo-ptero:latest": "acevo-ptero:latest"
+    },
+    "file_denylist": [],
+    "startup": "/opt/acevo/scripts/start.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"server\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/ash\r\necho \"Initialization complete. Game files will be handled by the Docker container upon first startup.\"",
+            "container": "alpine:3.4",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server TCP Port",
+            "description": "The TCP port used for the server's web interface and API polling. Must be unique for every running server.",
+            "env_variable": "SERVER_TCP_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric|between:1,65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Dashboard Password",
+            "description": "Password for dashboard",
+            "env_variable": "DASHBOARD_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Steam Username",
+            "description": "Steam account name (not email).",
+            "env_variable": "STEAM_USERNAME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:64",
+            "field_type": "text"
+        },
+        {
+            "name": "Steam Password",
+            "description": "Steam account password.",
+            "env_variable": "STEAM_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:128",
+            "field_type": "text"
+        },
+        {
+            "name": "Server UDP Port",
+            "description": "UDP Game Port",
+            "env_variable": "SERVER_UDP_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric|between:1,65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Game Internal API Port",
+            "description": "Game Internal API Port",
+            "env_variable": "SERVER_HTTP_PORT",
+            "default_value": "48080",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|numeric|between:1,65535",
+            "field_type": "text"
+        }
+    ]
+}
